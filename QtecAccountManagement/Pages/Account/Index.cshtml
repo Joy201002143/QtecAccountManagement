@@ -1,0 +1,48 @@
+﻿@page
+@model QtecAccountManagement.Pages.Account.IndexModel
+@{
+    ViewData["Title"] = "Chart of Accounts";
+}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Chart of Accounts</h2>
+    <a asp-page="Create" class="btn btn-primary">Create New</a>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Code</th>
+                        <th>Account Name</th>
+                        <th>Parent Account</th>
+                        <th>Type</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var account in Model.Accounts)
+                    {
+                        <tr>
+                            <td>@account.AccountCode</td>
+                            <td>@account.AccountName</td>
+                            <td>@account.ParentAccountName</td>
+                            <td>@account.AccountType</td>
+                            <td>
+                                <span class="badge @(account.IsActive ? "bg-success" : "bg-secondary")">
+                                    @(account.IsActive ? "Active" : "Inactive")
+                                </span>
+                            </td>
+                            <td>
+                                <a asp-page="Edit" asp-route-id="@account.AccountId" class="btn btn-sm btn-outline-primary">Edit</a>
+                                <a asp-page="Delete" asp-route-id="@account.AccountId" class="btn btn-sm btn-outline-danger">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
