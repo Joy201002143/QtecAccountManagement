@@ -1,0 +1,60 @@
+﻿@page
+@model QtecAccountManagement.Pages.Account.EditModel
+@{
+    ViewData["Title"] = Model.IsNew ? "Create Account" : "Edit Account";
+}
+<div class="card">
+    <div class="card-header">
+        <h4>@ViewData["Title"]</h4>
+    </div>
+    <div class="card-body">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Account.AccountId" />
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Account.AccountCode" class="form-label"></label>
+                    <input asp-for="Account.AccountCode" class="form-control" />
+                    <span asp-validation-for="Account.AccountCode" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Account.AccountName" class="form-label"></label>
+                    <input asp-for="Account.AccountName" class="form-control" />
+                    <span asp-validation-for="Account.AccountName" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Account.ParentAccountId" class="form-label"></label>
+                    <select asp-for="Account.ParentAccountId" asp-items="Model.ParentAccounts" class="form-control">
+                        <option value="">-- Select Parent Account --</option>
+                    </select>
+                    <span asp-validation-for="Account.ParentAccountId" class="text-danger"></span>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="Account.AccountType" class="form-label"></label>
+                    <select asp-for="Account.AccountType" class="form-control">
+                        <option value="Asset">Asset</option>
+                        <option value="Liability">Liability</option>
+                        <option value="Equity">Equity</option>
+                        <option value="Income">Income</option>
+                        <option value="Expense">Expense</option>
+                    </select>
+                    <span asp-validation-for="Account.AccountType" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3 form-check">
+                <input type="checkbox" class="form-check-input" asp-for="Account.IsActive" />
+                <label class="form-check-label" asp-for="Account.IsActive"></label>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save</button>
+                <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

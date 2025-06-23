@@ -1,0 +1,146 @@
+﻿@page
+@model QtecAccountManagement.Pages.Vouchers.CreateModel
+
+@{
+    ViewData["Title"] = "Create Voucher";
+}
+
+<div class="card">
+    <div class="card-header">
+        <h4>Create Voucher</h4>
+    </div>
+    <div class="card-body">
+        <form method="post" id="voucherForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div class="row mb-3">
+                <div class="col-md-3">
+                    <label asp-for="Voucher.VoucherType" class="form-label"></label>
+                    <select asp-for="Voucher.VoucherType" class="form-control">
+                        <option value="Journal">Journal Voucher</option>
+                        <option value="Payment">Payment Voucher</option>
+                        <option value="Receipt">Receipt Voucher</option>
+                    </select>
+                    <span asp-validation-for="Voucher.VoucherType" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Voucher.VoucherNumber" class="form-label"></label>
+                    <input asp-for="Voucher.VoucherNumber" class="form-control" />
+                    <span asp-validation-for="Voucher.VoucherNumber" class="text-danger"></span>
+                </div>
+                <div class="col-md-3">
+                    <label asp-for="Voucher.VoucherDate" class="form-label"></label>
+                    <input asp-for="Voucher.VoucherDate" type="date" class="form-control" />
+                    <span asp-validation-for="Voucher.VoucherDate" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <label asp-for="Voucher.Reference" class="form-label"></label>
+                    <input asp-for="Voucher.Reference" class="form-control" />
+                    <span asp-validation-for="Voucher.Reference" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="Voucher.Notes" class="form-label"></label>
+                <textarea asp-for="Voucher.Notes" class="form-control" rows="3"></textarea>
+                <span asp-validation-for="Voucher.Notes" class="text-danger"></span>
+            </div>
+
+            <h5 class="mb-3">Voucher Details</h5>
+
+            <div id="voucherDetails">
+                @for (int i = 0; i < Model.Voucher.Details.Count; i++)
+                {
+                    <div class="row mb-3 voucher-detail">
+                        <div class="col-md-4">
+                            <select asp-for="Voucher.Details[i].AccountId" asp-items="Model.Accounts" class="form-control">
+                                <option value="">-- Select Account --</option>
+                            </select>
+                            <span asp-validation-for="Voucher.Details[i].AccountId" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <input asp-for="Voucher.Details[i].Amount" class="form-control" />
+                            <span asp-validation-for="Voucher.Details[i].Amount" class="text-danger"></span>
+                        </div>
+                        <div class="col-md-2">
+                            <select asp-for="Voucher.Details[i].IsDebit" class="form-control">
+                                <option value="true">Debit</option>
+                                <option value="false">Credit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input asp-for="Voucher.Details[i].Description" class="form-control" placeholder="Description" />
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm remove-detail">Remove</button>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="mb-3">
+                <button type="button" id="addDetail" class="btn btn-secondary">Add Detail</button>
+            </div>
+
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Save Voucher</button>
+                <a asp-page="Index" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            // Add new detail row
+            $('#addDetail').click(function() {
+                var index = $('.voucher-detail').length;
+                var newRow = `
+                    <div class="row mb-3 voucher-detail">
+                        <div class="col-md-4">
+                            <select name="Voucher.Details[${index}].AccountId" class="form-control">
+                                <option value="">-- Select Account --</option>
+                                @foreach (var account in Model.Accounts)
+                                {
+                                        <option value="@account.Value">@account.Text</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="col-md-2">
+                            <input name="Voucher.Details[${index}].Amount" class="form-control" />
+                        </div>
+                        <div class="col-md-2">
+                            <select name="Voucher.Details[${index}].IsDebit" class="form-control">
+                                <option value="true">Debit</option>
+                                <option value="false">Credit</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <input name="Voucher.Details[${index}].Description" class="form-control" placeholder="Description" />
+                        </div>
+                        <div class="col-md-1">
+                            <button type="button" class="btn btn-danger btn-sm remove-detail">Remove</button>
+                        </div>
+                    </div>
+                `;
+                $('#voucherDetails').append(newRow);
+            });
+
+            // Remove detail row
+            $(document).on('click', '.remove-detail', function() {
+                $(this).closest('.voucher-detail').remove();
+                // Reindex all rows
+                $('.voucher-detail').each(function(index) {
+                    $(this).find('select, input').each(function() {
+                        var name = $(this).attr('name').replace(/\[\d+\]/, `[${index}]`);
+                        $(this).attr('name', name);
+                    });
+                });
+            });
+        });
+    </script>
+}

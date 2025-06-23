@@ -1,0 +1,48 @@
+﻿@page
+@model QtecAccountManagement.Pages.Vouchers.IndexModel
+
+@{
+    ViewData["Title"] = "Vouchers";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>Vouchers</h2>
+    <div>
+        <a asp-page="Create" class="btn btn-primary">Create New</a>
+        <a asp-page-handler="Export" class="btn btn-success">Export to Excel</a>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Voucher #</th>
+                        <th>Date</th>
+                        <th>Type</th>
+                        <th>Reference</th>
+                        <th>Total Amount</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var voucher in Model.Vouchers)
+                    {
+                        <tr>
+                            <td>@voucher.VoucherNumber</td>
+                            <td>@voucher.VoucherDate.ToString("yyyy-MM-dd")</td>
+                            <td>@voucher.VoucherType</td>
+                            <td>@voucher.Reference</td>
+                            <td>@voucher.Details.Sum(d => d.Amount).ToString("N2")</td>
+                            <td>
+                                <a asp-page="Details" asp-route-id="@voucher.VoucherId" class="btn btn-sm btn-outline-info">Details</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
